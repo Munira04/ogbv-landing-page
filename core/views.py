@@ -1,12 +1,10 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from .forms import IncidentReportForm
+from django.shortcuts import render
 
 def home(request):
     return render(request, 'core/index.html')
 
 def report_incident(request):
-    return redirect('https://gbv-system.onrender.com/report/')
+    return render(request, 'core/report.html')
 
 def services(request):
     return render(request, 'core/services.html')
