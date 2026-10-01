@@ -1,0 +1,529 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+<style>
+
+    .wwd-section { width: 100%; padding: 0rem 2rem 5rem; background: #ffffff; border-bottom: 1px solid #23333333; }
+    .wwd-inner { max-width: 1200px; margin: 0 auto; }
+    .wwd-heading { text-align: center; margin: 3rem 0; }
+    .wwd-heading h2 { font-size: 2.6rem; font-weight: 800; color: #743089; letter-spacing: -0.03rem; line-height: 1.15; }
+    .wwd-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    .wwd-card { background: #ffffff; border-radius: 1rem; box-shadow: 0 2px 18px rgba(0, 0, 0, 0.07); overflow: hidden; transition: transform 0.28s ease, box-shadow 0.28s ease; display: flex; flex-direction: column; position: relative; }
+    .wwd-card:hover { transform: translateY(-6px); box-shadow: 0 12px 36px rgba(0, 0, 0, 0.13); }
+    .wwd-card__banner { width: 100%; height: 140px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; flex-shrink: 0; }
+    .wwd-card__banner--safety { background: linear-gradient(135deg, #4B0082 0%, #743089 100%); }
+    .wwd-card__banner--tfgbv { background: linear-gradient(135deg, #743089 0%, #A865B5 100%); }
+    .wwd-card__banner--tech { background: linear-gradient(135deg, #4B0082 0%, #A865B5 100%); }
+    .wwd-card__banner::before { content: ''; position: absolute; width: 110px; height: 110px; border-radius: 50%; background: rgba(255, 255, 255, 0.12); }
+    .wwd-card__icon { font-size: 3rem; position: relative; z-index: 1; filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.18)); }
+    .wwd-card__body { padding: 1.5rem 1.5rem 1.75rem; flex: 1; }
+    .wwd-card__title { font-size: 1.1rem; font-weight: 800; color: #1a1a2e; margin-bottom: 0.85rem; line-height: 1.3; }
+    .wwd-card__desc { font-size: 0.9rem; color: #4a4a6a; line-height: 1.75; }
+    @media (max-width: 900px) { .wwd-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .wwd-section { padding: 3rem 1.25rem 3.5rem; } .wwd-grid { grid-template-columns: 1fr; } .wwd-card__banner { height: 120px; } }
+
+    .about-section { width: 100%; background: #ffffff; padding: 5rem 2rem; border-top: 1px solid #e8d5f5; }
+    .about-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .about-img-wrap { position: relative; flex-shrink: 0; }
+    .about-img-placeholder { width: 100%; border-radius: 1.2rem; background: linear-gradient(135deg, #f0e6fa 0%, #e4d0f5 100%); box-shadow: 0 8px 36px rgba(75, 0, 130, 0.15); aspect-ratio: 4 / 3; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .placeholder-inner { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; }
+    .placeholder-inner svg { width: 96px; height: 96px; opacity: 0.8; }
+    .placeholder-inner p { font-size: 0.85rem; font-weight: 600; color: #743089; text-transform: uppercase; margin: 0; }
+    .about-badge { position: absolute; bottom: -1px; right: 1.5rem; background: #ffffff; border-radius: 0.75rem; padding: 0.85rem 1.2rem; display: flex; align-items: center; gap: 0.75rem; box-shadow: 0 6px 24px rgba(75, 0, 130, 0.18); min-width: 210px; border-bottom: 3px solid #743089; }
+    .about-badge__icon { width: 38px; height: 38px; background: linear-gradient(135deg, #A865B5, #4B0082); border-radius: 0.5rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; }
+    .about-badge__text strong { display: block; font-size: 0.82rem; font-weight: 700; color: #1a1a2e; white-space: nowrap; }
+    .about-badge__text span { font-size: 0.72rem; color: #7a7a9a; white-space: nowrap; }
+    .about-content h2 { font-size: 2.6rem; font-weight: 800; color: #743089; margin-bottom: 1.5rem; line-height: 1.15; }
+    .about-content p { font-size: 0.97rem; color: #3a3a5a; line-height: 1.8; margin-bottom: 1.1rem; text-align: justify; }
+    @media (max-width: 860px) { .about-inner { grid-template-columns: 1fr; gap: 2.5rem; } .about-content h2 { font-size: 2rem; } .about-badge { right: 1rem; min-width: 180px; } }
+    @media (max-width: 560px) { .about-section { padding: 3rem 1.25rem; } .about-content h2 { font-size: 1.8rem; } .about-badge { right: 0.75rem; padding: 0.65rem 0.9rem; min-width: 160px; } }
+
+    .role-section { width: 100%; padding: 5rem 2rem; background: linear-gradient(135deg, #4B0082 0%, #743089 55%, #A865B5 100%); position: relative; overflow: hidden; }
+    .role-section::before { content: ''; position: absolute; top: -80px; right: -80px; width: 320px; height: 320px; border-radius: 50%; background: rgba(255, 255, 255, 0.06); pointer-events: none; }
+    .role-section::after { content: ''; position: absolute; bottom: -100px; left: -60px; width: 260px; height: 260px; border-radius: 50%; background: rgba(255, 255, 255, 0.04); pointer-events: none; }
+    .role-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; position: relative; z-index: 1; }
+    .role-tag { display: inline-block; background: rgba(255, 255, 255, 0.15); color: #fff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.35rem 0.9rem; border-radius: 100px; margin-bottom: 1.2rem; border: 1px solid rgba(255, 255, 255, 0.25); }
+    .role-heading { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 900; color: #ffffff; line-height: 1.2; margin-bottom: 1.5rem; }
+    .role-body { font-size: 1rem; color: rgba(255, 255, 255, 0.88); line-height: 1.8; margin-bottom: 1.5rem; }
+    .role-body-bottom { font-size: 0.95rem; color: rgba(255, 255, 255, 0.78); line-height: 1.75; border-top: 1px solid rgba(255, 255, 255, 0.2); padding-top: 1.2rem; margin-top: 1.2rem; }
+    .role-pillars-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255, 255, 255, 0.6); margin-bottom: 1.1rem; }
+    .role-pillars { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; }
+    .role-pillars li { display: flex; align-items: flex-start; gap: 0.9rem; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 0.75rem; padding: 1rem 1.2rem; transition: background 0.22s, transform 0.22s; }
+    .role-pillars li:hover { background: rgba(255, 255, 255, 0.14); transform: translateX(4px); }
+    .role-pillar-icon { width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, 0.18); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem; }
+    .role-pillar-text { font-size: 0.93rem; color: rgba(255, 255, 255, 0.9); line-height: 1.55; font-weight: 500; padding-top: 0.18rem; }
+    @media (max-width: 860px) { .role-inner { grid-template-columns: 1fr; gap: 2.5rem; } }
+
+    .dss-section { width: 100%; padding: 5rem 2rem; background: #faf7ff; border-top: 4px solid #4B0082; }
+    .dss-inner { max-width: 1200px; margin: 0 auto; }
+    .dss-header { text-align: center; margin-bottom: 3.5rem; }
+    .dss-tag { display: inline-block; background: linear-gradient(135deg, #4B0082, #743089); color: #fff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.35rem 0.9rem; border-radius: 100px; margin-bottom: 1.1rem; }
+    .dss-heading { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 900; color: #4B0082; line-height: 1.2; margin-bottom: 1rem; }
+    .dss-subtext { font-size: 1rem; color: #555; line-height: 1.8; max-width: 700px; margin: 0 auto; }
+    .dss-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 3rem; }
+    .dss-card { background: #ffffff; border-radius: 1rem; padding: 1.8rem 1.8rem 1.8rem 1.5rem; border-left: 4px solid #743089; box-shadow: 0 3px 20px rgba(75, 0, 130, 0.08); display: flex; align-items: flex-start; gap: 1rem; transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s; }
+    .dss-card:hover { transform: translateY(-4px); box-shadow: 0 10px 32px rgba(75, 0, 130, 0.16); border-color: #4B0082; }
+    .dss-card-icon { width: 46px; height: 46px; border-radius: 0.65rem; background: linear-gradient(135deg, #4B0082, #A865B5); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.3rem; color:white;}
+    .dss-card-title { font-size: 1rem; font-weight: 800; color: #4B0082; margin-bottom: 0.4rem; }
+    .dss-card-desc { font-size: 0.9rem; color: #555; line-height: 1.65; }
+    .dss-bottom { background: linear-gradient(135deg, #4B0082 0%, #743089 60%, #A865B5 100%); border-radius: 1.25rem; padding: 2.5rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .dss-bottom-text p { font-size: 0.97rem; color: rgba(255, 255, 255, 0.88); line-height: 1.75; }
+    .dss-cta { display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.85rem 2rem; background: #ffffff; color: #4B0082; font-size: 0.95rem; font-weight: 800; border-radius: 100px; text-decoration: none; white-space: nowrap; transition: background 0.22s, color 0.22s, transform 0.2s, box-shadow 0.22s; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18); }
+    .dss-cta:hover { background: #A865B5; color: #ffffff; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25); }
+    .dss-cta svg { width: 16px; height: 16px; }
+    @media (max-width: 760px) { .dss-grid { grid-template-columns: 1fr; } .dss-bottom { flex-direction: column; text-align: center; } }
+
+    .join-section { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 6rem 1.5rem; overflow: hidden; background: #1a0830; }
+    .join-section::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 20% 30%, rgba(168, 101, 181, 0.35) 0%, transparent 60%), radial-gradient(ellipse 60% 70% at 80% 70%, rgba(75, 0, 130, 0.45) 0%, transparent 55%), radial-gradient(ellipse 100% 80% at 50% 50%, rgba(20, 5, 40, 1) 0%, transparent 100%); z-index: 0; }
+    .join-orb { position: absolute; border-radius: 50%; filter: blur(60px); opacity: 0.25; animation: join-drift 12s ease-in-out infinite alternate; z-index: 0; }
+    .join-orb-1 { width: 420px; height: 420px; background: #A865B5; top: -80px; left: -100px; animation-duration: 14s; }
+    .join-orb-2 { width: 300px; height: 300px; background: #4B0082; bottom: 0; right: -80px; animation-duration: 10s; animation-delay: -4s; }
+    .join-orb-3 { width: 200px; height: 200px; background: #d4aee0; top: 40%; left: 55%; animation-duration: 18s; animation-delay: -7s; }
+    @keyframes join-drift { to { transform: translate(30px, 20px) scale(1.08); } }
+    .join-grain { position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.5; pointer-events: none; z-index: 1; }
+    .join-content { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; }
+    .join-eyebrow { display: inline-block; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.25em; text-transform: uppercase; color: #ffffff; border: 1px solid rgba(168, 101, 181, 0.45); padding: 0.35rem 1rem; border-radius: 100px; margin-bottom: 2rem; backdrop-filter: blur(8px); background: rgba(116, 48, 137, 0.12); animation: join-fadeUp 0.7s ease both; }
+    .join-title { font-family: 'Playfair Display', serif; font-size: clamp(2.4rem, 6vw, 4.2rem); font-weight: 900; line-height: 1.1; color: #ffffff; margin-bottom: 1.5rem; animation: join-fadeUp 0.7s 0.1s ease both; }
+    .join-title span { color: #743089; font-style: italic; }
+    .join-body { font-family: 'DM Sans', sans-serif; font-size: clamp(1rem, 2vw, 1.15rem); font-weight: 300; line-height: 1.75; color: rgba(255, 255, 255, 0.72); max-width: 580px; margin: 0 auto 2.8rem; animation: join-fadeUp 0.7s 0.2s ease both; }
+    .join-btn { display: inline-flex; align-items: center; gap: 0.6rem; background: #A865B5; color: #ffffff; font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: 1rem; padding: 0.9rem 2.2rem; border-radius: 100px; border: none; cursor: pointer; text-decoration: none; position: relative; overflow: hidden; transition: background 0.35s ease, transform 0.2s ease; animation: join-fadeUp 0.7s 0.3s ease both; }
+    .join-btn:hover { background: #4B0082; transform: translateY(-3px); box-shadow: 0 12px 36px rgba(168, 101, 181, 0.35); }
+    .join-btn svg { transition: transform 0.3s ease; }
+    .join-btn:hover svg { transform: translateX(4px); }
+    @keyframes join-fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    .join-stats { position: relative; z-index: 2; display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin-top: 4rem; padding-top: 3rem; border-top: 1px solid rgba(168, 101, 181, 0.2); animation: join-fadeUp 0.7s 0.45s ease both; }
+    .join-stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: #743089; }
+    .join-stat-label { font-size: 0.8rem; font-weight: 300; color: rgba(255, 255, 255, 0.5); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.25rem; }
+
+    .faq-section { background: #f3eaf8; padding: 5rem 1.5rem; }
+    .faq-inner { max-width: 100%; margin: 0 auto;}
+    .faq-heading { text-align: center; margin-bottom: 3rem; }
+    .faq-heading h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 5vw, 3rem); font-weight: 900; color: #4B0082; line-height: 1.15; margin-bottom: 0.75rem; }
+    .faq-heading p { font-family: 'DM Sans', sans-serif; font-size: 1rem; color: #743089; font-weight: 300; }
+    .faq-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .faq-item { background: #ffffff; border-radius: 0.85rem; border: 1px solid rgba(116, 48, 137, 0.2); overflow: hidden; transition: box-shadow 0.25s ease; }
+    .faq-item:hover { box-shadow: 0 6px 24px rgba(75, 0, 130, 0.1); }
+    .faq-item.open { border-color: #743089; box-shadow: 0 6px 24px rgba(75, 0, 130, 0.12); }
+    .faq-question { width: 100%; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem 1.5rem; text-align: left; font-size: 1rem; font-weight: 600; color: #1a1a2e; transition: color 0.2s; }
+    .faq-item.open .faq-question { color: #4B0082; }
+    .faq-icon { flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: #f3eaf8; display: flex; align-items: center; justify-content: center; transition: background 0.25s, transform 0.3s ease; }
+    .faq-item.open .faq-icon { background: #A865B5; transform: rotate(45deg); color: white; }
+    .faq-icon svg { width: 14px; height: 14px; stroke: #4B0082; transition: stroke 0.25s; }
+    .faq-item.open .faq-icon svg { stroke: #fff; }
+    .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .faq-answer-inner { padding: 0 1.5rem 1.4rem; font-family: 'DM Sans', sans-serif; font-size: 0.93rem; font-weight: 300; color: #4a4a6a; line-height: 1.8; }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+
+<section class="wwd-section" id="wwd-title">
+    <div class="wwd-inner">
+        <img src="https://ogbv.gender.go.ke/images/help_is_available.png" alt="Help is available" style="width:100%;height:auto;display:block;border-radius:1rem;">
+        
+        <div class="wwd-heading">
+            <h2>Services</h2>
+        </div>
+
+        <div class="wwd-grid">
+            <article class="wwd-card">
+                <div class="wwd-card__banner wwd-card__banner--safety"><span class="wwd-card__icon">🛡️</span></div>
+                <div class="wwd-card__body">
+                    <h3 class="wwd-card__title">Digital Safety and Awareness</h3>
+                    <p class="wwd-card__desc">The Digital Safe Space platform provides information and educational resources that help individuals understand and respond to online abuse. Many survivors of technology-facilitated gender-based violence are unaware of the options available to protect themselves or report harmful behaviour.</p>
+                </div>
+            </article>
+
+            <article class="wwd-card">
+                <div class="wwd-card__banner wwd-card__banner--tfgbv"><span class="wwd-card__icon">💜</span></div>
+                <div class="wwd-card__body">
+                    <h3 class="wwd-card__title">Survivor Support and TFGBV Prevention</h3>
+                    <p class="wwd-card__desc">Technology-Facilitated Gender-Based Violence (TFGBV) is a growing challenge in digital spaces, particularly affecting women, girls, and marginalized communities.</p>
+                </div>
+            </article>
+
+            <article class="wwd-card">
+                <div class="wwd-card__banner wwd-card__banner--tech"><span class="wwd-card__icon">🚀</span></div>
+                <div class="wwd-card__body">
+                    <h3 class="wwd-card__title">Innovation and Technology for Safer Digital Spaces</h3>
+                    <p class="wwd-card__desc">The Digital Safe Space platform is an initiative of the State Department for Gender and Affirmative Action, a government department responsible for coordinating national efforts to promote gender equality, protect vulnerable populations, and eliminate gender-based violence in Kenya.</p>
+                </div>
+            </article>
+        </div>
+        
+        <div style="width: 100%; padding: 3rem 1rem; text-align: center;">
+            <a class="custom-link" href="">Learn more</a>
+        </div>
+    </div>
+</section>
+
+<section class="my-50">
+    <div style="padding: 2rem 0; background-color: #ffffff; text-align: center;">
+        <a href="" style="background:var(--report); color: white; padding: 20px; font-size: medium; font-weight: bold; border-radius: 5px; text-decoration: none; display: inline-block;">Click here to report abuse</a>
+    </div>
+</section>
+
+<section class="about-section">
+    <div class="about-inner">
+        <div class="about-img-wrap">
+            <div class="about-img-placeholder">
+                <div class="placeholder-inner">
+                    <svg viewBox="0 0 80 80" fill="none">
+                        <rect width="80" height="80" rx="8" fill="rgba(116,48,137,0.12)"/>
+                        <circle cx="40" cy="28" r="14" fill="rgba(116,48,137,0.45)"/>
+                        <path d="M10 72 C10 52 70 52 70 72" fill="rgba(116,48,137,0.45)"/>
+                        <circle cx="20" cy="32" r="9" fill="rgba(168,101,181,0.35)"/>
+                        <path d="M2 72 C2 56 38 56 38 72" fill="rgba(168,101,181,0.35)"/>
+                        <circle cx="60" cy="32" r="9" fill="rgba(168,101,181,0.35)"/>
+                        <path d="M42 72 C42 56 78 56 78 72" fill="rgba(168,101,181,0.35)"/>
+                    </svg>
+                    <p></p>
+                </div>
+            </div>
+            <div class="about-badge">
+                <div class="about-badge__icon">✦</div>
+                <div class="about-badge__text">
+                    <strong>Supporting Communities</strong>
+                    <span>Inclusive digital empowerment</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-content">
+            <h2>About Us</h2>
+            <p>The Digital Safe Space platform is an initiative of the State Department for Gender and Affirmative Action, a government department responsible for coordinating national efforts to promote gender equality, protect vulnerable populations, and eliminate gender-based violence in Kenya. The department operates under the Ministry of Gender, Culture, the Arts and Heritage and plays a central role in developing policies, programmes, and partnerships that advance gender equality and social inclusion across the country. Through its work with national and county governments, civil society organizations, and development partners, the department supports initiatives aimed at strengthening survivor protection systems, promoting women’s empowerment, and addressing gender-based violence both offline and in digital spaces.</p>
+        </div>
+    </div>
+</section>
+
+<section style="padding: 60px 20px; background-color: #f9f9fb; color: #333; line-height: 1.6; font-family: 'Barlow', sans-serif;">
+    <div style="max-width: 1000px; margin: 0 auto;">
+        <div style="text-align: center; margin-bottom: 50px;">
+            <h2 style="color: #4B0082; font-size: 2rem; margin-bottom: 20px;">Understanding Technology-Facilitated Gender-Based Violence</h2>
+            <p style="color: #4a5568; font-size: 1.1rem; max-width: 800px; margin: 0 auto;">TFGBV involves the use of digital tools—such as social media, messaging apps, and tracking devices—to harass, stalk, or abuse individuals. Recognizing these patterns is the first step toward safety and digital bodily autonomy.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 40px;">
+            <div style="background: #fff; padding: 25px; border-radius: 12px; border-left: 5px solid #4B0082; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <h3 style="margin-top: 0; color: #4B0082; font-size:1.2rem;">Doxing</h3>
+                <p style="font-size: 0.95rem; color: #718096; margin-top:10px;">The act of publishing someone's private or personal information online without their consent.</p>
+            </div>
+            <div style="background: #fff; padding: 25px; border-radius: 12px; border-left: 5px solid #743089; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <h3 style="margin-top: 0; color: #743089; font-size:1.2rem;">Cyber Stalking</h3>
+                <p style="font-size: 0.95rem; color: #718096; margin-top:10px;">The use of online platforms to harass, threaten or intimidate someone repeatedly, with the intent to cause emotional distress.</p>
+            </div>
+            <div style="background: #fff; padding: 25px; border-radius: 12px; border-left: 5px solid #A865B5; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <h3 style="margin-top: 0; color: #A865B5; font-size:1.2rem;">Cyber Mob</h3>
+                <p style="font-size: 0.95rem; color: #718096; margin-top:10px;">A large group of people online who collectively attack individuals or groups through online forums and social media.</p>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="" style="display: inline-block; padding: 14px 30px; background-color: #4B0082; color: #ffffff; text-decoration: none; font-weight: 600; border-radius: 8px; transition: background-color 0.3s ease;">Explore All Types of TFGBV</a>
+            <p style="margin-top: 15px; font-size: 0.85rem; color: #a0aec0;">Learn more about how digital abuse manifests and how to document it.</p>
+        </div>
+    </div>
+</section>
+
+<section style="width: 100%; background: linear-gradient(135deg, #4B0082, #743089); padding: 80px 20px; display: flex; justify-content: center; align-items: center; text-align: center; font-family:'Barlow', sans-serif;">
+    <div style="max-width: 900px;">
+        <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 25px; color: white;">Our Vision</h2>
+        <p style="font-size: 18px; line-height: 1.6; color: #f2f2f2; margin: 0 auto 0px;">A society free from gender discrimination and violence in all spheres of life.</p>
+
+        <h2 id="mission" style="font-size: 36px; font-weight: 700; margin-bottom: 25px; color: white;">Our Mission</h2>
+        <p style="font-size: 18px; line-height: 1.8; color: #f2f2f2; margin: 0 auto;">To promote and coordinate gender mainstreaming, the fight against gender-based violence, and socio-economic empowerment of all people for sustainable development.</p>
+    </div>
+</section>
+
+<section class="join-section">
+    <div class="join-orb join-orb-1"></div>
+    <div class="join-orb join-orb-2"></div>
+    <div class="join-orb join-orb-3"></div>
+    <div class="join-grain"></div>
+    
+    <div class="join-content">
+        <span class="join-eyebrow">🛡 Collective Action</span>
+        <h1 class="join-title">Join Us in Making<br>a <span>Difference</span></h1>
+        <p class="join-body">At State Department for Gender and Affirmative Action, we believe in the power of collective action. Together, we create safer and more inclusive digital spaces for everyone. Get involved today to help fight Technology-Facilitated Gender-Based Violence and advocate for the rights of marginalized communities online.</p>
+        <a href="#" class="join-btn">
+            Get Involved
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+        </a>
+        
+        <h2 style="position:relative; z-index:2; font-family:'Playfair Display',serif; font-size:clamp(1.6rem,5vw,3rem); font-weight:900; color:#ffffff; margin-top:4rem; margin-bottom:-2.5rem; line-height:1.15;">Our Impact In Numbers</h2>
+        
+        <div class="join-stats">
+            <div class="join-stat">
+                <div class="join-stat-num" data-target="12000">0</div>
+                <div class="join-stat-label">Community Members</div>
+            </div>
+            <div class="join-stat">
+                <div class="join-stat-num" data-target="4200">0</div>
+                <div class="join-stat-label">Cases Supported</div>
+            </div>
+            <div class="join-stat">
+                <div class="join-stat-num" data-target="30">0</div>
+                <div class="join-stat-label">Countries Reached</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="role-section">
+    <div class="role-inner">
+        <div class="role-left">
+            <span class="role-tag">State Department</span>
+            <h2 class="role-heading">Our Role in Addressing Gender-Based Violence</h2>
+            <p class="role-body">The State Department leads national efforts to prevent and respond to gender-based violence, driving inclusive policies and programmes that protect vulnerable communities across Kenya.</p>
+            <p class="role-body-bottom">The department also works with multiple stakeholders to ensure that gender equality principles are integrated into national development planning and public service delivery.</p>
+        </div>
+
+        <div class="role-right">
+            <p class="role-pillars-title">Our key areas of action</p>
+            <ul class="role-pillars">
+                <li><div class="role-pillar-icon">📋</div><span class="role-pillar-text">Developing and implementing gender policies and programmes</span></li>
+                <li><div class="role-pillar-icon">🤝</div><span class="role-pillar-text">Coordinating national strategies to prevent sexual and gender-based violence</span></li>
+                <li><div class="role-pillar-icon">🛡️</div><span class="role-pillar-text">Supporting survivor protection and referral systems</span></li>
+                <li><div class="role-pillar-icon">📣</div><span class="role-pillar-text">Promoting public awareness and community engagement on gender equality</span></li>
+                <li><div class="role-pillar-icon">🏛️</div><span class="role-pillar-text">Strengthening institutional responses to violence against women and girls</span></li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="dss-section">
+    <div class="dss-inner">
+        <div class="dss-header">
+            <span class="dss-tag">Initiative</span>
+            <h2 class="dss-heading">Digital Safe Space Initiative</h2>
+            <p class="dss-subtext">The Digital Safe Space platform was developed to strengthen national responses to Technology-Facilitated Gender-Based Violence (TFGBV) — combining technology with survivor-centered support services for a safer digital Kenya.</p>
+        </div>
+
+        <div class="dss-grid">
+            <div class="dss-card">
+                <div class="dss-card-icon">🔒</div>
+                <div class="dss-card-text">
+                    <p class="dss-card-title">Secure Reporting System</p>
+                    <p class="dss-card-desc">A protected, confidential system for reporting online abuse safely and discreetly.</p>
+                </div>
+            </div>
+            <div class="dss-card">
+                <div class="dss-card-icon">💜</div>
+                <div class="dss-card-text">
+                    <p class="dss-card-title">Survivor Support Services</p>
+                    <p class="dss-card-desc">Access to guidance, counselling referrals, and dedicated survivor support resources.</p>
+                </div>
+            </div>
+            <div class="dss-card">
+                <div class="dss-card-icon">🛡️</div>
+                <div class="dss-card-text">
+                    <p class="dss-card-title">Digital Safety Resources</p>
+                    <p class="dss-card-desc">Awareness tools and digital safety guidance to help users protect themselves online.</p>
+                </div>
+            </div>
+            <div class="dss-card">
+                <div class="dss-card-icon">⚖️</div>
+                <div class="dss-card-text">
+                    <p class="dss-card-title">Legal & Counselling Referrals</p>
+                    <p class="dss-card-desc">Direct referrals to relevant legal, medical, and counselling services for survivors.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="dss-bottom">
+            <div class="dss-bottom-text">
+                <p>By combining technology with survivor-centered support, the platform contributes to a safer digital environment and strengthens Kenya's broader efforts to combat gender-based violence. Visit the official website to learn more about the State Department's programmes, policies, and initiatives.</p>
+            </div>
+            <a href="" target="_blank" rel="noopener noreferrer" class="dss-cta">
+                Learn More
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="faq-section">
+    <div class="faq-inner">
+        <div class="faq-heading">
+            <h2>Frequently Asked Questions</h2>
+            <p>Everything you need to know about our work and how to get help.</p>
+        </div>
+
+        <div class="faq-list">
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    What is Technology-Facilitated Gender-Based Violence (TFGBV)?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">TFGBV Refers to an act of violence committed through digital technologies e.g mobile phones, social media etc.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    Can I report anonymously?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">A survivor can report anonymously via the digital space.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    What happens after I report?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">You will get a follow up call for psychosocial support, counselling and referral for other services.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    How long does it take to receive support?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">You will get a follow up call for psychosocial support, counselling and referral for other services in 48 hours.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    What are the common examples of TFGBV?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Doxing, cyberstalking, cyber mob, cyber bullying, non-consensual sharing of intimate images, cat-fishing, dead naming, hacking, denial of access to technology, defamation, gender trolling, cross platform harassment, sextortion, shallow fake.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    Who is most at risk?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Anyone can be a victim.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    How can someone report TFGBV?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">A survivor can: report to the national TFGBV system, can report to National 1195 or 911, report to the nearest police station, or report directly to the online platform where abuse occurred.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    Will my information remain confidential?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Yes. Reporting mechanisms must: Protect survivor identity, follow data protection law, ensure secure storage of digital evidence.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    What is the typical response time?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">48 Hours.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    What law address TFGBV in Kenya?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">TFGBV falls under existing laws such as computed misuse, data protection act, sexual offences act, PADV Act, children’s act, Penal Code against Technology Facilitated Gender-based Violence.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    What Support services are available to survivors?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Survivors may Access: psychosocial Counselling, Legal assistance, medical services if required, digital safety guidance, shelter services.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    What should a survivor do immediately after experiencing TFGBV?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        <ul style="list-style:disc; margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Do not delete evidence.</li>
+                            <li>Take screen shots (Include date and URL).</li>
+                            <li>Secure accounts - Change password</li>
+                            <li>Enable 2 Factor Authentication</li>
+                            <li>Report to the platform</li>
+                            <li>Report to the authorities</li>
+                            <li>Seek support services</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    Can TFGBV incidents be prosecuted?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Yes, if sufficient evidence exists. Perpetrators may face fines, imprisonment, civil damages, or platform bans.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question" aria-expanded="false">
+                    What roles does this online digital safe space seek to achieve?
+                    <span class="faq-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">
+                        <ul style="list-style:disc; margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>To build partnership for accountability and access to justice</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock content %}
